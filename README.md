@@ -87,7 +87,7 @@ I also analyzed **Apple's (AAPL) stock price movements** over time.
 
 ![AAPL Stock Price Trend](SP%20appl%20stock.png)
 
-### 🧑‍💻 Code Snippets
+### Code Snippets
 Below are the Python code snippets used for visualization:
 
 ```python
@@ -103,6 +103,8 @@ plt.show()
 # AAPL Stock Price Trend
 aapl_stock = sp500_stocks[sp500_stocks['Symbol'] == 'AAPL']
 plt.figure(figsize=(12, 6))
+
+
 plt.plot(aapl_stock['Date'], aapl_stock['Close'], label='AAPL Close Price')
 plt.title('AAPL Stock Price Trend')
 plt.xlabel('Date')
@@ -110,3 +112,52 @@ plt.ylabel('Close Price')
 plt.legend()
 plt.show()
 
+
+## ⏳ Step 4: Time Series Forecasting
+
+### 🔮 ARIMA Model for S&P 500 Prediction
+
+To predict future trends in the **S&P 500 Index**, I used the **Auto ARIMA** model, which automatically selects the best ARIMA parameters based on AIC (Akaike Information Criterion).
+
+#### 📌 Stationarity Check (ADF Test)
+Before applying ARIMA, we checked if the time series is stationary using the **Augmented Dickey-Fuller (ADF) Test**:
+
+```python
+result = sm.tsa.adfuller(sp500_index['S&P500'])
+print(f'ADF Statistic: {result[0]}')
+print(f'p-value: {result[1]}')
+
+📊 Results:
+
+ADF Statistic: 0.4040
+p-value: 0.9816 (Greater than 0.05 → The time series is non-stationary)
+Since the p-value is high, we apply differencing to make the series stationary.
+
+⚙️ Auto ARIMA Model
+The Auto ARIMA function automatically finds the best parameters:
+sp500_diff = sp500_index['S&P500'].diff().dropna()
+arima_model = auto_arima(sp500_diff, seasonal=False, trace=True, stepwise=True)
+
+📌 Best ARIMA Model Found: ARIMA(2,0,2) with intercept
+This model was selected based on the lowest AIC score (25188.691).
+n_periods = 30
+forecast, conf_int = arima_model.predict(n_periods=n_periods, return_conf_int=True)
+forecast_dates = pd.date_range(sp500_index.index[-1], periods=n_periods, freq='B')
+
+plt.figure(figsize=(10,6))
+plt.plot(sp500_index.index, sp500_index['S&P500'], label='S&P 500')
+plt.plot(forecast_dates, forecast.cumsum() + sp500_index['S&P500'].iloc[-1], 
+         label='Forecast', color='red')
+plt.fill_between(forecast_dates, conf_int[:, 0].cumsum() + sp500_index['S&P500'].iloc[-1], 
+                 conf_int[:, 1].cumsum() + sp500_index['S&P500'].iloc[-1], color='red', alpha=0.3)
+plt.title('S&P 500 Forecast')
+plt.legend()
+plt.show()
+📊 Visualization: S&P 500 Forecast
+Below is the forecasted trend for the next 30 business days:
+
+
+🔍 Insights:
+
+The forecast shows a projected upward/downward trend for the S&P 500.
+The red shaded region represents the confidence interval, showing possible fluctuations.
