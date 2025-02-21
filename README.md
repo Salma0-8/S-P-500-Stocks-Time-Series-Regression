@@ -111,7 +111,7 @@ plt.xlabel('Date')
 plt.ylabel('Close Price')
 plt.legend()
 plt.show()
-
+```
 
 ## ⏳ Step 4: Time Series Forecasting
 
@@ -126,7 +126,7 @@ Before applying ARIMA, we checked if the time series is stationary using the **A
 result = sm.tsa.adfuller(sp500_index['S&P500'])
 print(f'ADF Statistic: {result[0]}')
 print(f'p-value: {result[1]}')
-
+```
 📊 Results:
 
 ADF Statistic: 0.4040
@@ -135,11 +135,13 @@ Since the p-value is high, we apply differencing to make the series stationary.
 
 ⚙️ Auto ARIMA Model
 The Auto ARIMA function automatically finds the best parameters:
+```
 sp500_diff = sp500_index['S&P500'].diff().dropna()
 arima_model = auto_arima(sp500_diff, seasonal=False, trace=True, stepwise=True)
-
+```
 📌 Best ARIMA Model Found: ARIMA(2,0,2) with intercept
 This model was selected based on the lowest AIC score (25188.691).
+```
 n_periods = 30
 forecast, conf_int = arima_model.predict(n_periods=n_periods, return_conf_int=True)
 forecast_dates = pd.date_range(sp500_index.index[-1], periods=n_periods, freq='B')
@@ -153,6 +155,7 @@ plt.fill_between(forecast_dates, conf_int[:, 0].cumsum() + sp500_index['S&P500']
 plt.title('S&P 500 Forecast')
 plt.legend()
 plt.show()
+```
 📊 Visualization: S&P 500 Forecast
 Below is the forecasted trend for the next 30 business days:
 
