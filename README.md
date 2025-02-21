@@ -1,7 +1,3 @@
-Sure! Here's a **GitHub README.md** style write-up with a more personal tone, like you're narrating your own journey through this project.  
-
----
-
 # 📈 S&P 500 Stocks Time Series Regression  
 
 ## 🚀 Introduction  
