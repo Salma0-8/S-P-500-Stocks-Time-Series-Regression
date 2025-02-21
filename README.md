@@ -83,9 +83,24 @@ To understand the historical performance of the **S&P 500 Index**, I plotted the
 ![S&P 500 Index Trend](SP%20500%20index%20trend.png)
 
 ### 📉 AAPL Stock Price Trend
-Similarly, I analyzed **Apple's (AAPL) stock price movements**.
+I also analyzed **Apple's (AAPL) stock price movements** over time.
+
+![AAPL Stock Price Trend](SP%20appl%20stock.png)
+
+### 🧑‍💻 Code Snippets
+Below are the Python code snippets used for visualization:
 
 ```python
+# S&P 500 Index Trend
+plt.figure(figsize=(12, 6))
+plt.plot(sp500_index.index, sp500_index['S&P500'], label="S&P 500 Index")
+plt.title("S&P 500 Index Trend")
+plt.xlabel('Year')
+plt.ylabel('Index Value')
+plt.legend()
+plt.show()
+
+# AAPL Stock Price Trend
 aapl_stock = sp500_stocks[sp500_stocks['Symbol'] == 'AAPL']
 plt.figure(figsize=(12, 6))
 plt.plot(aapl_stock['Date'], aapl_stock['Close'], label='AAPL Close Price')
